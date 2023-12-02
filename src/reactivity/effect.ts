@@ -6,15 +6,17 @@ class ReactiveEffect {
   }
   run() {
     affectEffect = this // 将ReactiveEffect实例赋给全局变量affectEffect
-    this._fn()
+    return this._fn()  // “runner” 把执行结果返回出去
   }
 }
 export function effect(fn: any) {
-  // fn
   const _effect = new ReactiveEffect(fn)
-  _effect.run()
+  return _effect.run.bind(_effect)  // 把方法返回出去，相当于返回了runner函数，但是指针需要指向当前effect实例
+  // return _effect.run 如果不写bind的话，调用这个函数时的调用者就是window对象了
 }
 
+
+// 实现track
 const targetMap = new Map()
 export function track(target, key) {
   let depMaps = targetMap.get(target)
@@ -30,6 +32,7 @@ export function track(target, key) {
   dep.add(affectEffect)
 }
 
+// 实现trigger
 export function trigger(target, key) {
   let depMap = targetMap.get(target)
   let effects = depMap.get(key)
