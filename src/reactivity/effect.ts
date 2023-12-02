@@ -1,7 +1,7 @@
 let affectEffect //定义全局变量获取到effect
 class ReactiveEffect {
   private _fn: any
-  constructor(fn) {
+  constructor(fn, public schedule?) {
     this._fn = fn
   }
   run() {
@@ -9,8 +9,8 @@ class ReactiveEffect {
     return this._fn()  // “runner” 把执行结果返回出去
   }
 }
-export function effect(fn: any) {
-  const _effect = new ReactiveEffect(fn)
+export function effect(fn: any, options: any = {}) {
+  const _effect = new ReactiveEffect(fn , options.schedule)
   return _effect.run.bind(_effect)  // 把方法返回出去，相当于返回了runner函数，但是指针需要指向当前effect实例
   // return _effect.run 如果不写bind的话，调用这个函数时的调用者就是window对象了
 }
@@ -37,6 +37,11 @@ export function trigger(target, key) {
   let depMap = targetMap.get(target)
   let effects = depMap.get(key)
   for (const effect of effects) {
-    effect.run()
+
+    if (effect.schedule) {
+      effect.schedule()
+    } else {
+      effect.run()
+    }
   }
 }
