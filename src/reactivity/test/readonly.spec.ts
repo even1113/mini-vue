@@ -26,4 +26,19 @@ describe("readonly", () => {
 
   })
 
+  it("reactive nested", () => {
+    const original = {
+      foo: 1,
+      person: {
+         age: 18
+      }
+   }
+   const observed1 = reactive(original)
+   const observed2 = readonly(original)
+
+   expect(isReactive(observed1.person)).toBe(true)
+   expect(isReadonly(observed2.person)).toBe(true)
+
+  })
+
 })

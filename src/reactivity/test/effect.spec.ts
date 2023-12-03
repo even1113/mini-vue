@@ -20,4 +20,12 @@ describe('effect', () => {
       expect(foo).toBe(11)
       expect(result).toBe("foo")
    })
+
+   // it("stop", () => {
+   //    const obj = reactive({foo: 1})
+   //    const runner = effect(() => {
+   //       obj.foo++
+   //    })
+
+   // })
 });
