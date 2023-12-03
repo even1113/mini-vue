@@ -7,13 +7,6 @@ describe('effect', () => {
          age: 10
       }) 
       let nextAge
-      // effect(() => {
-      //    nextAge = obj.age + 1
-      // })
-      // expect(nextAge).toBe(11)
-
-      // obj.age++
-      // expect(nextAge).toBe(12)
    })
 
    it("return runner when call effect", () => {
