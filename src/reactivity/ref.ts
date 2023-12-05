@@ -11,6 +11,7 @@ class RefImpl {
   private _value: any
   private dep: any
   private _rawValue: any
+  private _v_isRef = true
   constructor(value) {
     this._rawValue = value // 存储开始的值
     this._value = convert(value) // 如果不是响应式的对象需要转换成响应式的，如果只是普通数据类型的数据那么不管
@@ -39,4 +40,10 @@ export function convert(value) {
 }
 export function ref(value) {
   return new RefImpl(value)
+}
+export function isRef(value) {
+  return !!value._v_isRef  // 如果是ref那么自然会返回自己身上的_v_isRef属性值，如果不是的话那么会返回undefined 为了返回布尔值在前面加上!!
+}
+export function unRef(value) { 
+  return isRef(value) ? value.value : value // 如果是ref 返回 ref.value 否则 返回 value本身
 }
