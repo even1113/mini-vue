@@ -12,10 +12,9 @@ function createGetter(isReadOnly = false, shallow = false) {
       return isReadOnly
     }
 
-    
     const res = Reflect.get(target, key)
 
-    // 实现shallowReadonly: 第一层是只读的，内层都是普通的对象，内层对象无响应式
+    // 实现shallowReadonly: 创建只读的响应式对象，但只有第一层对象是响应式的，内层的对象都是普通对象
     if (shallow) {
       return res
     }
@@ -25,7 +24,7 @@ function createGetter(isReadOnly = false, shallow = false) {
       return isReadOnly ? readonly(res) : reactive(res)
     }
 
-    // 实现isReadOnly: 如果 isReadOnly 为 true 那么直接返回res 否则进入track开始收集依赖
+    // 实现isReadOnly: 如果 isReadOnly 为 true 那么直接返回res，否则进入track开始收集依赖
     if (!isReadOnly) {
       // 收集依赖
       track(target, key)

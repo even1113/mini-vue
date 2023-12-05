@@ -26,7 +26,7 @@ describe("readonly", () => {
 
   })
 
-  it("reactive nested", () => {
+  it("嵌套 reactive / readonly", () => {
     const original = {
       foo: 1,
       person: {

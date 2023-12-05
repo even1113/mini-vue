@@ -9,6 +9,7 @@ describe("shallowReaonly", () => {
     })
     expect(isReadonly(obj)).toBe(true)
     expect(isReadonly(obj.foo)).toBe(false)
+    expect(isReadonly(obj.foo.name)).toBe(false)
   })
 
   it("warn when call set", () => {
