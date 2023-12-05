@@ -27,7 +27,7 @@ class RefImpl {
     // 触发依赖
     // 这里比较的是数据是 一个是proxy 一个是原始值 （ 受限于 Object.is() ），所以需要转换
     if (hasChanged(newValue, this._rawValue)) { // 判断当前值和原来的值是否相等 如果相等则不触发更新
-      this._rawValue = newValue // 原始值也需要更新
+      this._rawValue = newValue // 原始值也需要更新，因为下次新旧值对比的时候，拿的是_rawValue进行对比的
       this._value = convert(newValue)  // 注意需要修改value之后再去通知effect执行 
       triggerEffects(this.dep)
     }  
