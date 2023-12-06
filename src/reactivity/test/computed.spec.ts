@@ -1,5 +1,5 @@
-import { computed } from "../computed";
-import { reactive } from "../reactive";
+import { computed } from "../computed"
+import { reactive } from "../reactive"
 
 describe('computed', () => {
 
@@ -26,7 +26,7 @@ describe('computed', () => {
     // lazy : 没有执行cValue.value 的时候 getter是不会执行的
     expect(getter).not.toHaveBeenCalled()
 
-    expect(cValue.value).toBe(1)
+    expect(cValue.value).toBe(1)  // 初始化执行一次
     expect(getter).toHaveBeenCalledTimes(1)
 
     // should not compute again
@@ -35,8 +35,15 @@ describe('computed', () => {
 
     // should not compute until needed
     value.foo = 2
+    expect(getter).toHaveBeenCalledTimes(1) 
+
+    // now it should compute
     expect(cValue.value).toBe(2)
-    expect(getter).toHaveBeenCalledTimes(1) // getter 再次被执行
+    expect(getter).toHaveBeenCalledTimes(2) 
+    
+  //   // should not compute again
+  //   cValue.value
+  //   expect(getter).toHaveBeenCalledTimes(2)
 
   })
 });
