@@ -1,6 +1,6 @@
 import { effect } from '../effect'
 import { reactive } from '../reactive'
-import { isRef, ref, unRef } from '../ref'
+import { isRef, ref, unRef, proxyRefs } from '../ref'
 describe("ref", () => {
   it("happy path", () => {
     const a = ref(1)
@@ -59,6 +59,31 @@ describe("ref", () => {
     const c = 2
     expect(unRef(a)).toBe(1)
     expect(unRef(c)).toBe(2)
+  })
+
+  it("proxyRefs", () => {
+    const user = {
+      age: ref(1),
+      name: "zhangsan",
+    }
+    const proxyUser = proxyRefs(user)
+
+    //  get 
+    expect(user.age.value).toBe(1)
+    expect(proxyUser.name).toBe("zhangsan")
+    expect(proxyUser.age).toBe(1)  // expect(proxyUser.age.value).toBe(1)  省去了value的操作
+    
+
+
+    // set  
+    proxyUser.age = 20
+    expect(proxyUser.age).toBe(20)
+    expect(user.age.value).toBe(20)
+
+    proxyUser.age = ref(20)
+    expect(proxyUser.age).toBe(20)
+    expect(user.age.value).toBe(20)
+
   })
 
 })

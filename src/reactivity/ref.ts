@@ -1,3 +1,4 @@
+import { unref } from "vue"
 import { hasChanged, isObject } from "../shared"
 import { trackEffects, triggerEffects } from "./effect"
 import { reactive } from "./reactive"
@@ -41,9 +42,25 @@ export function convert(value) {
 export function ref(value) {
   return new RefImpl(value)
 }
-export function isRef(value) {
-  return !!value._v_isRef  // 如果是ref那么自然会返回自己身上的_v_isRef属性值，如果不是的话那么会返回undefined 为了返回布尔值在前面加上!!
+export function isRef(ref) {
+  return !!ref._v_isRef  // 如果是ref那么自然会返回自己身上的_v_isRef属性值，如果不是的话那么会返回undefined 为了返回布尔值在前面加上!!
 }
-export function unRef(value) { 
-  return isRef(value) ? value.value : value // 如果是ref 返回 ref.value 否则 返回 value本身
+export function unRef(ref) { 
+  return isRef(ref) ? ref.value : ref // 如果是ref 返回 ref.value 否则 返回 value本身
+}
+export function proxyRefs(objectWithRefs) {
+  return new Proxy(objectWithRefs, {
+    get(target, key) {
+      // get : 如果是 ref 那么返回ref.value 否则 返回 value本身（基本数据类型）
+      return unRef(Reflect.get(target, key))
+    },
+    set(target, key, value) {
+      // 判断 当前对象属性值 和 传入的值 是否是ref
+      if (isRef(target[key]) && !isRef(value)) {
+        return (target[key].value = value)
+      } else {
+        return Reflect.set(target, key, value)
+      }
+    }
+  })
 }
