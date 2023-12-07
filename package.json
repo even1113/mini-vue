@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "type": "module",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "rollup -c --bundleConfigAsCjs"
   },
   "devDependencies": {
     "@babel/core": "^7.23.5",
@@ -14,6 +16,10 @@
     "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
     "rollup": "^4.6.1",
+    "tslib": "^2.6.2",
     "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "@rollup/plugin-typescript": "^11.1.5"
   }
 }
