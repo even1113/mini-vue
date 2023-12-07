@@ -1,4 +1,3 @@
-import { unref } from "vue"
 import { hasChanged, isObject } from "../shared"
 import { trackEffects, triggerEffects } from "./effect"
 import { reactive } from "./reactive"

@@ -1,4 +1,5 @@
 import { computed } from "../computed"
+import { effect } from "../effect";
 import { reactive } from "../reactive"
 
 describe('computed', () => {
@@ -41,9 +42,28 @@ describe('computed', () => {
     expect(cValue.value).toBe(2)
     expect(getter).toHaveBeenCalledTimes(2) 
     
-  //   // should not compute again
-  //   cValue.value
-  //   expect(getter).toHaveBeenCalledTimes(2)
+    // should not compute again
+    cValue.value
+    expect(getter).toHaveBeenCalledTimes(2)
+
+    // 测试value的响应式,scheduler
+    let calls = 0
+    let dummy = 0
+    const options = {
+      scheduler: () => {
+        console.log('12')
+      }
+    }
+    effect(() => {
+      calls++
+      dummy = value.foo
+    }, options)
+    expect(calls).toBe(1) // 初始化响应式的时候，会执行fn（因为要初始化全局变量activeEffect实现后续的依赖追踪）
+    expect(dummy).toBe(2)
+
+    value.foo = 3  // 当实现了响应式中之后，再次修改响应式的值，进入scheduler而不是fn
+    expect(calls).toBe(1)
+    expect(dummy).toBe(2)
 
   })
 });
