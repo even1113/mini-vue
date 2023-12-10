@@ -1,4 +1,4 @@
-import { extend } from "../shared"
+import { extend } from "../shared/index"
 
 let activeEffect //定义全局变量获取到effect
 export class ReactiveEffect {
