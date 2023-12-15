@@ -1,9 +1,10 @@
 export function createComponentInstance(vnode: any) {
   const component = {
     vnode,
-    type: vnode.type
+    type: vnode.type,
+    setupState: {}
   }
-
+  // console.log('component', component)
   return component
 }
 
@@ -15,8 +16,19 @@ export function setupComponent(instance) {
 }
 
 function setupStatefulComponent(instance: any) {
-  // 这里的component为什么等于instance.type？？
+  // 这里的component为什么等于instance.type？？=> createVnode的时候只传递了第一个参数
   const component = instance.type
+
+  instance.proxy = new Proxy({}, {
+    get(target, key) {
+      const { setupState } = instance
+      if ( key in setupState) {
+        return setupState[key]
+      }
+    },
+  })
+
+
   const { setup } = component
 
   if (setup) {
@@ -34,12 +46,13 @@ function handleSetupResult(instance, setupResult: any) {
   if (typeof setupResult === 'object') {
     instance.setupState = setupResult
   }
+
+  // 处理完组件的自身绑定的状态后，去处理subTree的
   finishComponentSetup(instance)
 }
 
 function finishComponentSetup(instance) {
-  const Component = instance.type
-
-  instance.render = Component.render
+  const component = instance.type
+  instance.render = component.render
 }
 
